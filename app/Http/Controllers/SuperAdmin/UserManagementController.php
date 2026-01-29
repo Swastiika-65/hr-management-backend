@@ -24,7 +24,7 @@ class UserManagementController extends Controller
     }
 
     public function store(Request $request)
-    {
+    { return $request;
         $request->validate([
             'name'     => 'required|string',
             'email'    => 'required|email|unique:users',
