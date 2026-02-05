@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Auth;
 class ProjectMakeController extends Controller
 {
     public function store(Request $request)
-  {
+    {
         // 🔐 Only HR & SuperAdmin can assign
-        if (!in_array(Auth::user()->role->name, ['HR', 'SuperAdmin'])) {
+        if (!in_array(Auth::user()->role->name, ['hr', 'superadmin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -26,11 +26,10 @@ class ProjectMakeController extends Controller
             'description' => $request->description,
             'team_lead_id' => $request->team_lead_id,
         ]);
-$project->users()->attach($request->user_id);
+        $project->users()->attach($request->user_id);
         return response()->json([
             'message' => 'Project created successfully',
             'project' => $project
         ], 201);
     }
 }
-

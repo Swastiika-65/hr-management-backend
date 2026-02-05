@@ -26,15 +26,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/register2',[AuthController::class, 'register2']);
+
+Route::post('/register2', [AuthController::class, 'register2']);
 Route::post('/login2', [AuthController::class, 'login2']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout2', [AuthController::class, 'logout2']);
 });
 // Route::post('/project',[ProjectController::class,'assign']);
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/project1', [MailController::class, 'send']);
-// });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/project1', [MailController::class, 'send']);
+});
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/project2', [LoginLogController::class, 'login']);
 });
@@ -44,18 +46,28 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/project4', [LeaveController::class, 'apply']);
 });
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/project5', [LeaveController::class, 'approve']);
-// });
-Route::middleware(['auth:sanctum','superadmin'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/leave/{id}/approve', [LeaveController::class, 'approve']);
+});
+Route::middleware(['auth:sanctum', 'superadmin'])->group(function () {
     Route::post('/roles', [RoleController::class, 'updateRole']);
 });
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/project', [projectController::class, 'assign']);
 });
 Route::middleware(['auth:sanctum'])->group(function () {
-Route::post('/projectassign', [ProjectMakeController::class, 'store']);
+    Route::post('/projectassign', [ProjectMakeController::class, 'store']);
 });
-// Route::middleware(['auth:sanctum'])->group(function () {
-// Route::post('/group', [GroupController::class, 'sendMessage']);
-// });
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/group', [GroupController::class, 'sendMessage']);
+});
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/group-get', [GroupController::class, 'getMessages']);
+});
+Route::post('/forgot-password-simple', [AuthController::class, 'forgotPasswordSimple']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/switch', [ProjectController::class, 'switchProject']);
+});

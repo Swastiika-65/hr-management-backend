@@ -28,9 +28,22 @@ class ProjectController extends Controller
 
 
     public function switchProject(Request $request)
-    {
+    {  
+        $request->validate([
+            'user_id'=>'required|exists:users,id',
+            'project_id'=>'required|exists:projects,id'
+        ]);
         $user = User::find($request->user_id);
+       if(!$user){
+        return response()->json([
+            'message'=>'user not found'
+        ],404);
+       }
+
         $user->projects()->sync([$request->project_id]);
+        return response()->json([
+            'message'=>'project switched successfully'
+        ]);
     }
 }
 

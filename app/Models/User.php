@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
-    
+
     protected $fillable = [
         'name',
         'email',
@@ -33,9 +33,14 @@ class User extends Authenticatable
     {
         return $this->role->name === $role;
     }
-    
+
     public function projects()
     {
-        return $this->belongsToMany(ProjectMake::class, 'project_user', 'user_id', 'project_id');
+        return $this->belongsToMany(
+            ProjectMake::class,
+            'project_user',
+            'user_id',
+            'project_id'
+        );
     }
 }

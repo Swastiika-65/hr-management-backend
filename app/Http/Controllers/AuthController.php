@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\LoginLog;
+use App\Models\ProjectMake;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Str;
+// use Illuminate\Support\Facades\Mail;
+
 
 class AuthController extends Controller
 {
@@ -92,6 +97,64 @@ class AuthController extends Controller
             ]
         ]);
     }
+    public function forgotPasswordSimple(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:6'
+        ]);
+        $user = User::where('email', $request->email)->first();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+        return response()->json([
+            'message' => 'password updated successfully'
+        ]);
+    }
+
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'user unauthorised'
+            ], 401);
+        }
+
+        // Get all projects of this user through pivot table
+        $projects = $user->projects()->with('teamLead')->get();
+
+        if ($projects->isEmpty()) {
+            return response()->json([
+                'message' => 'No project assigned to this user'
+            ], 404);
+        }
+
+        $projectData = $projects->map(function ($project) {
+            return [
+                'project_id' => $project->id,
+                'project_name' => $project->name,
+
+                'team_lead' => $project->teamLead ? [
+                    'id' => $project->teamLead->id,
+                    'name' => $project->teamLead->name,
+                    'email' => $project->teamLead->email,
+                ] : null,
+            ];
+        });
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role_id' => $user->role_id,
+            ],
+            'projects' => $projectData
+        ]);
+    }
+
 
     public function logout2(Request $request)
     {

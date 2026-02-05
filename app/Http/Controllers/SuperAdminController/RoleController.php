@@ -24,11 +24,11 @@ class RoleController extends Controller
             ],404);
         }
 
-        if($user->role->name== 'employee'){
-            return response()->json([
-                'message' => 'User cannot update role'
-            ],403);
-        }
+        // if($user->role->name== 'employee'){
+        //     return response()->json([
+        //         'message' => 'User cannot update role'
+        //     ],403);
+        // }
 
         $userRole = $user->role_id;
         if ($request->role_id != 1 && $userRole != $request->role_id) {

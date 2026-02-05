@@ -19,4 +19,8 @@ class ProjectMake extends Model
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id');
     }
+    public function teamLead()
+    {
+        return $this->belongsTo(User::class, 'team_lead_id');
+    }
 }

@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class GroupChat extends Model
 {
-    protected $fillable = ['user_id','message'];
+    protected $fillable = ['project_id','user_id','message',];
 }
